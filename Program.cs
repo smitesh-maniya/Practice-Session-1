@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Text;
 using MySql.Data.MySqlClient;
 
@@ -47,7 +46,6 @@ namespace PracticeSession1
                             continue;
                         }
 
-                        // migrate record between range
                         Console.WriteLine("Enter starting and ending number for migration: ");
                         start = int.Parse(Console.ReadLine());
                         end = int.Parse(Console.ReadLine());
@@ -136,7 +134,7 @@ namespace PracticeSession1
         private static void migrateInRange(int n, int m)
         {
             try{
-                Console.WriteLine("inside migration");
+                Console.WriteLine("Fetching data...");
 
                 MySqlCommand command2 = sqlConnection.CreateCommand();
                 command2.CommandText = $"select * from sourcetable where ID >= {n} and ID <= {m}";
@@ -166,12 +164,7 @@ namespace PracticeSession1
                     else if(i%100 == 0)
                     {
                         lst.Add(Rows[i].ToString());
-                        sCommand +=(string.Join(",",lst)).ToString();
-                        sCommand+=(";");
-
-                        MySqlCommand myCmd1 = new MySqlCommand(sCommand, sqlConnection);
-                        myCmd1.CommandType = System.Data.CommandType.Text;
-                        myCmd1.ExecuteNonQuery();
+                        executeQuery(sCommand, lst);
                         count=i;
                         Thread.Sleep(3000);
                         
@@ -182,11 +175,13 @@ namespace PracticeSession1
                     
                 }
                 if (tmp == false) return;
-                sCommand += (string.Join(",", lst)).ToString();
-                sCommand += (";");
-                MySqlCommand myCmd = new MySqlCommand(sCommand, sqlConnection);
-                myCmd.CommandType = System.Data.CommandType.Text;
-                myCmd.ExecuteNonQuery();
+                // sCommand += (string.Join(",", lst)).ToString();
+                // sCommand += (";");
+                // MySqlCommand myCmd = new MySqlCommand(sCommand, sqlConnection);
+                // myCmd.CommandType = System.Data.CommandType.Text;
+                // myCmd.ExecuteNonQuery();
+                executeQuery(sCommand, lst);
+
                 count = Rows.Count;
                 Console.WriteLine("All records are inserted.");
                 done = true;
@@ -195,6 +190,16 @@ namespace PracticeSession1
             catch(Exception ex){
                 Console.WriteLine("Exception");
             }
+        }
+
+        private static void executeQuery(string sCommand,List<string> lst)
+        {
+            sCommand +=(string.Join(",",lst)).ToString();
+            sCommand+=(";");
+
+            MySqlCommand myCmd1 = new MySqlCommand(sCommand, sqlConnection);
+            myCmd1.CommandType = System.Data.CommandType.Text;
+            myCmd1.ExecuteNonQuery();
         }
 
         private static int sum(int v1, int v2)
