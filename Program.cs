@@ -175,11 +175,6 @@ namespace PracticeSession1
                     
                 }
                 if (tmp == false) return;
-                // sCommand += (string.Join(",", lst)).ToString();
-                // sCommand += (";");
-                // MySqlCommand myCmd = new MySqlCommand(sCommand, sqlConnection);
-                // myCmd.CommandType = System.Data.CommandType.Text;
-                // myCmd.ExecuteNonQuery();
                 executeQuery(sCommand, lst);
 
                 count = Rows.Count;
